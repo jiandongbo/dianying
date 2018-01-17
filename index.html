@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        input {
+            width: 400px;
+            height: 30px;
+            border-radius: 5px;
+            margin: 0 auto;
+            float: left;
+            outline:none;
+        }
+
+        button {
+            height: 30px;
+            width: 60px;
+            border-radius: 5px;
+            border: none;
+
+        }
+
+        .tital {
+            width: 900px;
+            margin: 50px 0px;
+            margin-left: 450px;
+
+
+        }
+
+        .box {
+            width: 200px;
+            height: 120px;
+            float: left;
+            overflow: hidden;
+            margin-left: 30px;
+            margin-top:30px ;
+            border: 1px solid #ccc;
+
+
+        }
+
+        .tupian {
+            width: 65px;
+            height: 97px;
+            margin: 10px 10px;
+            float: left;
+        }
+
+        body {
+            font-size: 12px;
+        }
+
+        .neirong {
+            margin: 10px 10px;
+        }
+
+        .neirong div {
+            margin: 10px 0;
+        }
+        h1{
+            text-align: center;
+            margin-top: 10px;
+
+            font-size: 30px;
+        }
+        h3{
+            color: #8A8B8C;
+            text-align: center;
+            font-size: 15px;
+        }
+
+    </style>
+</head>
+<body>
+<h1>电影搜索</h1>
+<h3>根据豆瓣电影API搜索显示</h3>
+<div class="tital"><input placeholder="请输入电影名或演员名">
+    <button>搜索</button>
+</div>
+<div class="rongqi"></div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.js"></script>
+<script>
+
+
+    $('button').on('click', function () {
+        $.ajax({
+
+            url: 'https://api.douban.com/v2/movie/search?alt=xd',
+
+            data: {
+                q: $('input').val(),
+
+
+            },
+            type: 'GET',
+            dataType: 'jsonp',
+            jsonp: 'callback',
+
+            success: function (data) {
+                function name(da) {
+                    for (var i = 0; i < da.length; i++) {
+                        return da[i]
+                    }
+                }
+
+
+                var html = document.querySelector('.rongqi');
+                var arr = data.subjects;
+                var str = '';
+                for (var i = 0; i < arr.length; i++) {
+                    str += '<div class="box">';
+                    str += '<img class="tupian" src="' + arr[i].images.small + '">';
+                    str += '<div class="neirong">';
+                    str += '<div class="ming">' + data.subjects[i].title + '</div>';
+                    str += '<div class="pingfen">评分:' + data.subjects[i].rating.average + '</div>';
+                    str += '<div class="fanzui">类型:' + data.subjects[i].genres + '</div>';
+                    str += '<div class="yanyuan">主演：' + name(data.subjects[i].casts).name + '</div>';
+                    str += '</div>';
+                    str += '</div>'
+                }
+
+                html.innerHTML = str
+
+
+            }
+
+        })
+    })
+</script>
+</html>
